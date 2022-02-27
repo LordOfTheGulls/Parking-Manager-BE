@@ -8,14 +8,14 @@ namespace PM_AUTH
 {
     public static class Config
     {
-        public static List<TestUser> GetUsers() => new List<TestUser>
+        /*public static List<TestUser> GetUsers() => new List<TestUser>
         {
            new TestUser()
            {
                Username = "alex",
                Password = "password"
            }
-        };
+        };*/
 
         public static IEnumerable<IdentityResource> GetResources() => new List<IdentityResource>
         {

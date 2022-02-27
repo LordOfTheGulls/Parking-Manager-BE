@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PM_DAL.UnitOfWork;
 
 namespace PM_API.Controllers
 {
@@ -8,12 +9,22 @@ namespace PM_API.Controllers
     [Route("[controller]")]
     public class ApiController : ControllerBase
     {
+        private IUnitOfWork Uow {get; set;}
+
+        public ApiController(IUnitOfWork uow)
+        {
+            Uow = uow;
+        }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
 
            var v = await HttpContext.GetTokenAsync("access_token");
-            return Ok("Hello");
+
+           Console.WriteLine(await Uow.ParkingLotRepository.GetAll());
+
+           return Ok("Hello");
         }
 
         [Authorize]

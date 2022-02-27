@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using PM_AUTH;
 using PM_AUTH.AuthorizationRequirements;
 using PM_AUTH.Data;
+using System.Net.WebSockets;
+using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,7 @@ builder.Services.AddCors(options =>
 
             builder
             .WithOrigins("http://localhost:4200")
-            .WithMethods("GET", "POST");
+            .WithMethods("GET", "POST", "PUT");
         });
 });
 
@@ -67,7 +69,6 @@ builder.Services
 //.AddTestUsers(Config.GetUsers());
 //On Production ->.AddSigningCredentials(); 
 
-
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddCors();
@@ -84,7 +85,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.None });
+app.UseCookiePolicy(new CookiePolicyOptions { 
+    MinimumSameSitePolicy = SameSiteMode.None 
+});
 
 app.UseRouting();
 

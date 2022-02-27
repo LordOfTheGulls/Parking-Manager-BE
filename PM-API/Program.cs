@@ -1,13 +1,15 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Newtonsoft.Json;
-using System.Security.Claims;
-using System.Text;
+using Newtonsoft.Json.Serialization;
+using PM_API.Extensions.Services;
+using PM_API.Middlewares;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services
-.AddAuthentication("Bearer")
+//Services.
+builder.Services.AddAuthentication("Bearer")
 .AddJwtBearer("Bearer", o =>
 {
     o.Authority = "https://localhost:7288";
@@ -15,54 +17,24 @@ builder.Services
     o.RequireHttpsMetadata = false;
 });
 
-builder.Services
-.AddAuthorization();
+builder.Services.AddAuthorization();
 
-/*builder.Services
-.AddAuthentication(config =>
-{
-    //We check the cooked to confirm we are authenticated.
-    config.DefaultAuthenticateScheme = "ClientCookie";
-    //When we sign in we will deal out a cookie.
-    config.DefaultSignInScheme = "ClientCookie";
-    //Use this to check if we are allowed to do something.
-    config.DefaultChallengeScheme = "Server";
+builder.Services.AddWebSocketManager();
+
+builder.Services.ConfigureDbContext(builder.Configuration);
+
+builder.Services.AddControllers()
+.AddFluentValidation(o => {
+    o.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 })
-.AddCookie("ClientCookie")
-.AddOAuth("Server", config =>
+.AddNewtonsoftJson(o =>
 {
-    config.ClientId = "client_id";
-    config.ClientSecret = "client_secret";
-    config.CallbackPath = "/oauth/callback";
-    config.AuthorizationEndpoint = "https://localhost:7288/accounts/login"; //Server Path
-    config.TokenEndpoint         = "https://localhost:7288/auth/token"; //Server Path
-    config.SaveTokens = true;
-    config.Events = new OAuthEvents()
+    o.SerializerSettings.ContractResolver = new DefaultContractResolver()
     {
-        OnCreatingTicket = context =>
-        {
-            var accessToken = context.AccessToken;
-            
-            var payload = accessToken.Split('.')[1];
-            
-            var bytes = Convert.FromBase64String(payload);
-            
-            var jsonPayload = Encoding.UTF8.GetString(bytes);
-            
-            var claims = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonPayload);
-            
-            foreach(var claim in claims)
-            {
-                context.Identity.AddClaim(new Claim(claim.Key, claim.Value));
-            }
-
-            return Task.CompletedTask;
-        }
+        NamingStrategy = new CamelCaseNamingStrategy()
     };
-});*/
+});
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -82,6 +54,13 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseWebSockets(new WebSocketOptions()
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(5500),
+});
+
+app.UseWebSocketServer();
 
 app.MapControllers();
 
