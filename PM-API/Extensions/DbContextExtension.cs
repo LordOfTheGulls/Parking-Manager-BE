@@ -8,7 +8,7 @@ namespace PM_API.Extensions.Services
     {
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<PMDBContext>(o => o.UseNpgsql(configuration.GetConnectionString("PostgreSQL")));
+            services.AddDbContext<PMDBContext>(o => o.UseNpgsql(configuration.GetConnectionString("PostgreSQL"), x => x.MigrationsAssembly("PM-DAL")));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

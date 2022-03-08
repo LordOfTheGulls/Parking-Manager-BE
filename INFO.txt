@@ -1,0 +1,26 @@
+PG Admin Login:
+
+
+	Master Password:	 				C@@l3rMast3r97
+
+	Server Password: 					pmdb1234
+
+
+Useful Dotnet Commands:
+
+
+	Initial Migration: 					dotnet ef migrations add InitialMigration -c PMDBContext -s ..\PM-API\PM-API.csproj
+	
+	Update Database From Latest Migration: 	dotnet ef database update -c PMDBContext -s ../PM-AUTH/PM-AUTH.csproj
+
+	Identity Migration:					dotnet ef migrations add InitialIdentityServerPersistedGrantMigration -c PMDBContext -s ..\PM-AUTH\PM-AUTH.csproj -o Migrations/IdentityServer
+	
+
+DROP TABLES ----> DROP SCHEMA public CASCADE; CREATE SCHEMA public;
+
+1) Forgotten Password
+2) Email Verification
+3) Refresh Tokens
+4) Id Tokens
+5) User Table Migrations
+6) Roles & Rights

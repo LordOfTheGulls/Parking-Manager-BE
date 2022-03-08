@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PM_DAL.Interfaces
 {
-    public interface IRepositoryBase<TEntity> where TEntity : TableEntity
+    public interface IRepositoryBase<TEntity> where TEntity: class
     {
         public Task<TEntity> GetById(long id);
         public Task<IEnumerable<TEntity>> GetAll();

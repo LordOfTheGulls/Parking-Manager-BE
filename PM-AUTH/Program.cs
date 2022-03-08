@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using PM_AUTH;
 using PM_AUTH.AuthorizationRequirements;
-using PM_AUTH.Data;
-using System.Net.WebSockets;
-using System.Threading;
+using PM_DAL;
+using PM_DAL.Entity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,22 +30,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 /*builder.Services.TryAddScoped<SignInManager<IdentityUser>>();*/
-/*
-builder.Services.AddDbContext<AppDbContext>(config =>
+
+builder.Services.AddDbContext<PMDBContext>(config =>
 {
-    config.UseInMemoryDatabase("Memory");
-});*/
+    //config.UseInMemoryDatabase("Memory");
+    config.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"), x => x.MigrationsAssembly("PM-DAL"));
+});
+
 builder.Services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
 
 /*builder.Services.AddIdentity<IdentityUser, IdentityRole>();*/
-builder.Services.AddDbContext<AppDbContext>(config =>
+/*builder.Services.AddDbContext<PMDBContext>(config =>
 {
     // for in memory database  
     config.UseInMemoryDatabase("MemoryDb");
-});
+});*/
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-.AddEntityFrameworkStores<AppDbContext>()
+builder.Services.AddIdentity<User, Role>()
+.AddEntityFrameworkStores<PMDBContext>()
 .AddDefaultTokenProviders();
 
 builder.Services.ConfigureApplicationCookie(config =>
@@ -56,16 +56,19 @@ builder.Services.ConfigureApplicationCookie(config =>
     config.LoginPath = "/Auth/Login";
 });
 
-builder.Services
-.AddIdentityServer(o =>
+builder.Services.AddIdentityServer(o =>
 {
     o.UserInteraction.LoginUrl = "https://localhost:7288/Auth/Login";
 })
-.AddAspNetIdentity<IdentityUser>()
+.AddAspNetIdentity<User>()
 .AddInMemoryIdentityResources(Config.GetResources())
 .AddInMemoryApiScopes(Config.GetApis())
 .AddInMemoryClients(Config.GetClients())
-.AddDeveloperSigningCredential();
+.AddDeveloperSigningCredential()
+.AddOperationalStore(options =>
+{
+    options.ConfigureDbContext = o => o.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"), x => x.MigrationsAssembly("PM-DAL"));
+});
 //.AddTestUsers(Config.GetUsers());
 //On Production ->.AddSigningCredentials(); 
 

@@ -4,6 +4,6 @@ namespace PM_DAL.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        public IParkingLotRepository ParkingLotRepository { get; }
+        //public IParkingLotRepository ParkingLotRepository { get; }
     }
 }

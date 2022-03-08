@@ -22,7 +22,7 @@ namespace PM_API.Controllers
 
            var v = await HttpContext.GetTokenAsync("access_token");
 
-           Console.WriteLine(await Uow.ParkingLotRepository.GetAll());
+          // Console.WriteLine(await Uow.ParkingLotRepository.GetAll());
 
            return Ok("Hello");
         }

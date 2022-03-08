@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using PM_DAL.Interfaces;
-using PM_DAL.Repositories;
 using System.Data;
 using System.Data.Common;
 
@@ -15,13 +14,13 @@ namespace PM_DAL.UnitOfWork
 
         //private IDbContextTransaction _transaction;
 
-        public IParkingLotRepository ParkingLotRepository { get; private set; }
+        //public IParkingLotRepository ParkingLotRepository { get; private set; }
 
         public UnitOfWork(PMDBContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            ParkingLotRepository = new ParkingLotRepository(context);
+            //ParkingLotRepository = new ParkingLotRepository(context);
         }
 
         public async Task InitializeAsync()

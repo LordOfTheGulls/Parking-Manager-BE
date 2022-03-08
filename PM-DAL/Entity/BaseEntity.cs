@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PM_DAL.Interfaces
 {
-    public class TableEntity
+    public class BaseEntity
     {
         public long Id { get; set; }
     }
