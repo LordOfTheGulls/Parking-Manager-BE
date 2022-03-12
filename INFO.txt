@@ -16,7 +16,7 @@ Useful Dotnet Commands:
 
 	Update Database From Latest Migration: 	dotnet ef database update -c PMDBContext -s ../PM-AUTH/PM-AUTH.csproj
 
-	Scaffold Database:					dotnet ef dbcontext scaffold "Host=my_host;Database=my_db;Username=my_user;Password=my_pw" Npgsql.EntityFrameworkCore.PostgreSQL
+	Scaffold Database:					dotnet ef dbcontext scaffold "ID=postgres;Password=C@@l3rMast3r97;Host=localhost;Port=5432;Database=pmdb;Pooling=true;CommandTimeout=40" Npgsql.EntityFrameworkCore.PostgreSQL
 
 
 DROP TABLES ----> DROP SCHEMA public CASCADE; CREATE SCHEMA public;
