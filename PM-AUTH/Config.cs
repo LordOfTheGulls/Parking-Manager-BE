@@ -32,23 +32,26 @@ namespace PM_AUTH
         {
             new Client()
             {
-                ClientId            = "pmspa",
-                ClientName          = "Parking Manager - Web Client",
-                ClientSecrets       = { new Secret("secret".ToSha256()) },
-                AllowedGrantTypes   = GrantTypes.Code,
-                RequirePkce         = true,
-                RequireConsent      = false,
-                RequireClientSecret = false,
-                AccessTokenType     = AccessTokenType.Jwt,
-                AccessTokenLifetime = 600,
-                AllowedScopes       = { 
+                ClientId                = "pmspa",
+                ClientName              = "Parking Manager - Web Client",
+                ClientSecrets           = { new Secret("secret".ToSha256()) },
+                Enabled                 = true,
+                AllowedGrantTypes       = GrantTypes.Code,
+                AlwaysSendClientClaims  = true,
+                RequirePkce             = true,
+                RequireConsent          = false,
+                RequireClientSecret     = false,
+                AccessTokenType         = AccessTokenType.Jwt,
+                AccessTokenLifetime     = 600,
+                IdentityTokenLifetime   = 600,
+                AllowedScopes           = { 
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     "pmapi"
                 },
-                AllowedCorsOrigins = { "http://localhost:4200" },
+                AllowedCorsOrigins      = { "http://localhost:4200" },
                 AllowAccessTokensViaBrowser = true,
-                RedirectUris = { "http://localhost:4200/auth-callback" },
+                RedirectUris            = { "http://localhost:4200/auth-callback" },
             }
         };
     }

@@ -9,7 +9,7 @@ namespace PM_DAL.Interfaces
 {
     public interface IRepositoryBase<TEntity> where TEntity: class
     {
-        public Task<TEntity> GetById(long id);
+        public Task<TEntity> FindById(long id);
         public Task<IEnumerable<TEntity>> GetAll();
         public Task<long> GetCount();
         public Task Add(TEntity entity);

@@ -18,7 +18,7 @@ namespace PM_DAL.Repository
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<TEntity> GetById(long id)
+        public async Task<TEntity> FindById(long id)
         {
             return await _dbContext.Set<TEntity>().FindAsync(id);
         }

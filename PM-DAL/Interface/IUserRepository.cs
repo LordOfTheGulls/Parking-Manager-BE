@@ -11,10 +11,11 @@ namespace PM_DAL.Interface
 {
     public interface IUserRepository : IRepositoryBase<User>
     {
-        UserDto FindByUsername(string username);
-        UserDto FindByEmail(string email);
-        UserDto FindByName(string name);
-        UserDto FindByFirstName(string firstName);
-        UserDto FindByLastName(string lastName);
+        public Task<bool> ValidateCredentialsAsync(string username, string password, CancellationToken cancellationToken = default);
+        public Task<UserDto> FindByUsernameAsync(string username, CancellationToken cancellationToken = default);
+        public Task<UserDto> FindByEmailAsync(string email, CancellationToken cancellationToken = default);
+        public Task<UserDto> FindByNameAsync(string name, CancellationToken cancellationToken = default);
+        public Task<UserDto> FindByFirstNameAsync(string firstName, CancellationToken cancellationToken = default);
+        public Task<UserDto> FindByLastNameAsync(string lastName, CancellationToken cancellationToken = default);
     }
 }

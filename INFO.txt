@@ -11,10 +11,13 @@ Useful Dotnet Commands:
 
 	Initial Migration: 					dotnet ef migrations add InitialMigration -c PMDBContext -s ..\PM-API\PM-API.csproj
 	
-	Update Database From Latest Migration: 	dotnet ef database update -c PMDBContext -s ../PM-AUTH/PM-AUTH.csproj
 
 	Identity Migration:					dotnet ef migrations add InitialIdentityServerPersistedGrantMigration -c PMDBContext -s ..\PM-AUTH\PM-AUTH.csproj -o Migrations/IdentityServer
-	
+
+	Update Database From Latest Migration: 	dotnet ef database update -c PMDBContext -s ../PM-AUTH/PM-AUTH.csproj
+
+	Scaffold Database:					dotnet ef dbcontext scaffold "Host=my_host;Database=my_db;Username=my_user;Password=my_pw" Npgsql.EntityFrameworkCore.PostgreSQL
+
 
 DROP TABLES ----> DROP SCHEMA public CASCADE; CREATE SCHEMA public;
 

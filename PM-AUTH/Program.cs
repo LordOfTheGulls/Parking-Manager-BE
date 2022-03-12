@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PM_AUTH;
 using PM_AUTH.AuthorizationRequirements;
+using PM_AUTH.Extensions;
 using PM_DAL;
 using PM_DAL.Entity;
 
@@ -33,18 +34,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<PMDBContext>(config =>
 {
-    //config.UseInMemoryDatabase("Memory");
     config.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"), x => x.MigrationsAssembly("PM-DAL"));
 });
 
 builder.Services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
-
-/*builder.Services.AddIdentity<IdentityUser, IdentityRole>();*/
-/*builder.Services.AddDbContext<PMDBContext>(config =>
-{
-    // for in memory database  
-    config.UseInMemoryDatabase("MemoryDb");
-});*/
 
 builder.Services.AddIdentity<User, Role>()
 .AddEntityFrameworkStores<PMDBContext>()
@@ -68,8 +61,8 @@ builder.Services.AddIdentityServer(o =>
 .AddOperationalStore(options =>
 {
     options.ConfigureDbContext = o => o.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"), x => x.MigrationsAssembly("PM-DAL"));
-});
-//.AddTestUsers(Config.GetUsers());
+})
+.AddUserStore();
 //On Production ->.AddSigningCredentials(); 
 
 builder.Services.AddControllersWithViews();

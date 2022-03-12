@@ -12,10 +12,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{74D2AA44-DE81-47F8-9451-698701F9DA3D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{77374D63-9429-425F-B536-7DC546927EB4}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Снимки от Дипломна\Дипломна Работа - Александър Господинов (20651640).doc = ..\..\Снимки от Дипломна\Дипломна Работа - Александър Господинов (20651640).doc
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PM-CQRS", "..\PM-CQRS\PM-CQRS.csproj", "{E0ECCD11-060E-456C-A839-AA84977665D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PM-AUTH", "..\PM-AUTH\PM-AUTH.csproj", "{A91016C5-E69D-49AD-BC98-458B37DE5569}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B38484A6-7AD0-48EE-9E5D-1ECD0479AD94}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

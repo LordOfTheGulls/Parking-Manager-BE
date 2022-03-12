@@ -18,7 +18,7 @@ namespace PM_DAL
 
             modelBuilder.Entity<User>(b =>
             {
-                b.ToTable("User");
+                b.ToTable("user");
 
                 b.Ignore(c => c.AccessFailedCount)
                  .Ignore(c => c.LockoutEnabled)
@@ -52,27 +52,27 @@ namespace PM_DAL
 
             modelBuilder.Entity<UserRole>(b =>
             {
-                b.ToTable("UserRole");
+                b.ToTable("user_role");
             });
 
             modelBuilder.Entity<UserClaim>(b =>
             {
-                b.ToTable("UserClaim");
+                b.ToTable("user_claim");
             });
 
             modelBuilder.Entity<UserToken>(b =>
             {
-                b.ToTable("UserToken");
+                b.ToTable("user_token");
             });
 
             modelBuilder.Entity<UserLogin>(b =>
             {
-                b.ToTable("UserLogin");
+                b.ToTable("user_login");
             });
 
             modelBuilder.Entity<Role>(b =>
             {
-                b.ToTable("Role");
+                b.ToTable("role");
 
                 // Each Role can have many entries in the UserRole join table
                 b.HasMany(e => e.UserRoles)
@@ -89,7 +89,7 @@ namespace PM_DAL
 
             modelBuilder.Entity<RoleClaim>(b =>
             {
-                b.ToTable("RoleClaim");
+                b.ToTable("role_claim");
             });
 
             SeedUsers(modelBuilder);
