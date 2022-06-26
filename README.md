@@ -1,2 +1,2 @@
 # Parking-Manager-API
-Backend of the Web Based Parking Manager
+The Back End part of the Parking Manager
