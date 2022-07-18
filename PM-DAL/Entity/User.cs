@@ -11,8 +11,8 @@ namespace PM_DAL.Entity
     [Table("user")]
     public class User : IdentityUser<Int64>
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; } 
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
         public virtual ICollection<UserClaim> UserClaims { get; set; }
         public virtual ICollection<UserLogin> UserLogins { get; set; }
         public virtual ICollection<UserToken> UserTokens { get; set; }

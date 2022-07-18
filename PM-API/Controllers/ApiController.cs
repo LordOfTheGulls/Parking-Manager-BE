@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PM_DAL.UnitOfWork;
+using PM_CQRS.Dispatcher;
+using PM_CQRS.Queries;
+using PM_DAL.UOW;
 
 namespace PM_API.Controllers
 {
@@ -9,11 +11,15 @@ namespace PM_API.Controllers
     [Route("[controller]")]
     public class ApiController : ControllerBase
     {
-        private IUnitOfWork Uow {get; set;}
+        public readonly ICommandDispatcher _commandDispatcher;
+        public readonly IQueryDispatcher _queryDispatcher;
+        public readonly ILogger<ApiController> _logger;
 
-        public ApiController(IUnitOfWork uow)
+        public ApiController(ILogger<ApiController> logger, ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
         {
-            Uow = uow;
+            _commandDispatcher = commandDispatcher;
+            _queryDispatcher   = queryDispatcher;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -22,9 +28,14 @@ namespace PM_API.Controllers
 
            var v = await HttpContext.GetTokenAsync("access_token");
 
-          // Console.WriteLine(await Uow.ParkingLotRepository.GetAll());
+           var result = _queryDispatcher.DispatchAsync<GetParkingSpotStatusById, string>(
+                new GetParkingSpotStatusById() { 
+                    ParkingLotId = 1, 
+                    ParkingSpotId = 1
+                }
+            );
 
-           return Ok("Hello");
+            return Ok("Hello");
         }
 
         [Authorize]

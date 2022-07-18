@@ -1,11 +1,15 @@
 ﻿using PM_DAL.Interface;
 using PM_DAL.Interfaces;
 using PM_DAL.Repository;
+using System.Data.Common;
 
-namespace PM_DAL.UnitOfWork
+namespace PM_DAL.UOW
 {
     public interface IUnitOfWork : IDisposable
     {
+        public Task OpenConnectionAsync();
+        public Task CommitAsync();
+
         public IUserRepository UserRepository { get; }
         public IUserRoleRepository UserRoleRepository { get; }
         public IUserClaimRepository UserClaimRepository { get; }
@@ -16,10 +20,20 @@ namespace PM_DAL.UnitOfWork
         public IRoleClaimRepository RoleClaimRepository { get; }
 
         public IParkingLotRepository ParkingLotRepository { get; }
-        public IParkingLotPaymentMethodRepository ParkingLotPaymentMethodRepository { get; }
-        public IPaymentMethodRepository PaymentMethodRepository { get; }
+        public IParkingLotBlacklistRepository ParkingLotBlacklistRepository { get; }
+
+        public IParkingEventRepository ParkingEventRepository { get; }
+        public IParkingEventLogRepository ParkingEventLogRepository { get; }
+
+        public IParkingTrafficRepository ParkingTrafficRepository { get; }
+        public IParkingPaymentRepository ParkingPaymentRepository { get; }
+
+        public IParkingPaymentMethodRepository ParkingPaymentMethodRepository { get; }
+
         public IParkingSpotRepository ParkingSpotRepository { get; }
         public IParkingSpotTypeRepository ParkingSpotTypeRepository { get; }
         public IParkingFloorRepository ParkingFloorRepository { get; }
+
+        //IRepository<TEntity, TId> GetRepository<TEntity, Tid> where TEntity : Entity<Tid> where Tid : IEquatable<TId>;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PM_DAL;
-using PM_DAL.UnitOfWork;
+using PM_DAL.UOW;
 
 namespace PM_API.Extensions.Services
 {
@@ -8,9 +8,9 @@ namespace PM_API.Extensions.Services
     {
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<PMDBContext>(o => o.UseNpgsql(configuration.GetConnectionString("PostgreSQL"), x => x.MigrationsAssembly("PM-DAL")));
+            //services.AddDbContext<PMDBContext>(o => o.UseNpgsql(configuration.GetConnectionString("PostgreSQL"), x => x.MigrationsAssembly("PM-DAL")));
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

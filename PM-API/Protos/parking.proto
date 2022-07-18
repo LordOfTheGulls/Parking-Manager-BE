@@ -1,0 +1,37 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "PM_API";
+
+package Parking;
+
+service Parking {
+	rpc LogParkingEvent(LogParkingEventRequest) returns (LogParkingEventResponse);
+	rpc OpenBarrier(OpenBarrierRequest) returns (OpenBarrierResponse);
+	rpc CloseBarrier(CloseBarrierRequest) returns (CloseBarrierResponse);
+}
+
+message Empty{}
+
+message LogParkingEventRequest {
+	int64 EventLotId = 1;
+	int32 EventType = 2;
+}
+
+message LogParkingEventResponse {
+	
+}
+
+message OpenBarrierRequest {
+	int64 lotId = 1;
+	string licensePlate = 2;
+}
+
+message OpenBarrierResponse {
+	bool isBlacklisted = 1;
+}
+
+message CloseBarrierRequest {
+}
+
+message CloseBarrierResponse {
+}

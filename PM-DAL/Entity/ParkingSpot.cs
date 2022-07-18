@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace PM_DAL.Entity
     [Table("parking_spot")]
     public class ParkingSpot
     {
+        [Key]
         [Column("id")]
         public Int64 Id { get; set; }
 
@@ -30,7 +32,6 @@ namespace PM_DAL.Entity
 
         [Column("active")]
         public bool IsActive { get; set; } = true;
-
 
         public virtual ICollection<ParkingSpotType> ParkingSpotTypes { get; set; }
 

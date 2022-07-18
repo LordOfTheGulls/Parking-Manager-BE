@@ -1,4 +1,6 @@
-﻿using PM_DAL.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using PM_Common.Exceptions;
+using PM_DAL.Entity;
 using PM_DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,17 @@ namespace PM_DAL.Repository
         public ParkingLotRepository(PMDBContext dbContext) : base(dbContext)
         {
             context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        }
+
+        public async Task UpdateLocation(Int64 lotId, decimal latitude, decimal longitude, CancellationToken cancellationToken = default)
+        {
+            ParkingLot? lot = await context.ParkingLot.FirstOrDefaultAsync(lot => (lot.Id == lotId), cancellationToken);
+
+            if (lot == null)
+                throw new EntityDoesNotExistException(lotId, typeof(ParkingLot));
+
+            lot.Latitude  = latitude;
+            lot.Longitude = longitude;
         }
     }
 }

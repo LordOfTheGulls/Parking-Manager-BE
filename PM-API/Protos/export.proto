@@ -1,0 +1,39 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "PM_API";
+
+package export;
+
+service Export {
+	rpc ExportReportByDate(ExportReportByDateRequest) returns (stream ExportReportByDateResponse);
+	rpc ExportReportByPeriod(ExportReportByPeriodRequest) returns (stream ExportReportByPeriodResponse);
+}
+
+message ExportReportByDateRequest{
+	int64  ParkingLotId   = 1;
+	int32  ReportType 	  = 2;
+	string ReportForDate  = 3;
+}
+
+message ExportReportByDateResponse {
+	repeated ExportParkingEventReport ParkingEventReport = 1;
+}
+
+
+message ExportReportByPeriodRequest{
+	int64  ParkingLotId   = 1;
+	string ReportFromDate = 2;
+	string ReportToDate   = 3;
+	int32  ReportType 	  = 4;
+}
+
+message ExportReportByPeriodResponse {
+	repeated ExportParkingEventReport ParkingEventReport = 1;
+}
+
+message ExportParkingEventReport {
+	int64  EventLogId = 1;
+    int64  EventId	  = 2;
+	string EventName  = 3;
+	string EventDate  = 4;
+}

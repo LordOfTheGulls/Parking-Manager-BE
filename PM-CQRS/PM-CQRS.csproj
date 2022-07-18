@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PM-Common\PM-Common.csproj" />
+    <ProjectReference Include="..\PM-DAL\PM-DAL.csproj" />
+  </ItemGroup>
+
 </Project>

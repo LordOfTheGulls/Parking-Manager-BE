@@ -4,6 +4,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using PM_Common.DTO;
+using PM_Common.Json;
+using PM_DAL.UOW;
+using PM_CQRS.Dispatcher;
+using PM_CQRS.Commands;
+using PM_API.Services;
 
 namespace PM_API.Middlewares
 {
@@ -13,46 +21,50 @@ namespace PM_API.Middlewares
 
         private readonly WebSocketServerManager _serverManager;
 
-        public WebSocketMiddleware(RequestDelegate next, WebSocketServerManager serverManager)
+        private readonly ParkingSocketManager _parkingSocketManager;
+
+        public WebSocketMiddleware(RequestDelegate next, WebSocketServerManager serverManager, ParkingSocketManager parkingSocketManager)
         {
-            _next          = next;
-            _serverManager = serverManager;
+            _next                 = next                 ?? throw new ArgumentNullException(nameof(next));
+            _serverManager        = serverManager        ?? throw new ArgumentNullException(nameof(serverManager));
+            _parkingSocketManager = parkingSocketManager ?? throw new ArgumentNullException(nameof(parkingSocketManager));
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            Console.WriteLine(context.Request.Path.ToString());
-
-            if (context.WebSockets.IsWebSocketRequest && context.Request.Path == "/ws")
+            if (context.WebSockets.IsWebSocketRequest)
             {
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
-                string connectionID = _serverManager.AddSocket(webSocket);
+                string path = context.Request.Path.Value;
 
-                await SendConnectionIDAsnyc(webSocket, connectionID);
-
-                Console.WriteLine("Connection Established, Socket Created!");
-
-                await ReceiveMessage(webSocket, async (result, buffer) =>
+                if (path == "/ws/raspberry")
                 {
-                    if (result.MessageType == WebSocketMessageType.Text)
+                    await _parkingSocketManager.AssignSocket(webSocket);
+                }
+                else
+                {
+                    string connectionId = _serverManager.AddClient(webSocket);
+
+                    Console.WriteLine("Connection Established, Socket Created!");
+
+                    await ReceiveMessage(webSocket, async (result, buffer) =>
                     {
-                        Console.WriteLine($"Message is: {Encoding.UTF8.GetString(buffer)}");
-                        return;
-                    }
-                    else if (result.MessageType == WebSocketMessageType.Close)
-                    {
-                        Console.WriteLine("Received Close Message");
+                        if (result.MessageType == WebSocketMessageType.Close)
+                        {
+                            Console.WriteLine("Received Close Message");
 
-                        string id = _serverManager.GetAllSockets().FirstOrDefault(s => s.Value == webSocket).Key;
+                            string id = _serverManager.GetAllClients().FirstOrDefault(s => s.Value == webSocket).Key;
 
-                        _serverManager.GetAllSockets().TryRemove(id, out WebSocket socket);
+                            if (_serverManager.GetAllClients().TryRemove(id, out WebSocket socket))
+                            {
+                                await socket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, cancellationToken: CancellationToken.None);
+                            }
 
-                        await socket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, cancellationToken: CancellationToken.None);
-
-                        return;
-                    }
-                });
+                            return;
+                        }
+                    });
+                }
             }
             else
             {
@@ -60,19 +72,12 @@ namespace PM_API.Middlewares
             }
         }
 
-        private async Task SendConnectionIDAsnyc(WebSocket socket, string connectionID)
-        {
-            var buffer = Encoding.UTF8.GetBytes($"ConnectionID: {connectionID}");
-
-            await socket.SendAsync(buffer, WebSocketMessageType.Text, true, cancellationToken: CancellationToken.None);
-        }
-
         private async Task ReceiveMessage(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
         {
-            var buffer = new byte[1024 * 4];
-
             while (socket.State == WebSocketState.Open)
             {
+                var buffer = new byte[4024 * 4];
+
                 var result = await socket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer), cancellationToken: CancellationToken.None);
 
                 handleMessage(result, buffer);

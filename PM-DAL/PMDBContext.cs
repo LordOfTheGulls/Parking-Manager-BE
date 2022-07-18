@@ -7,9 +7,20 @@ namespace PM_DAL
 {
     public class PMDBContext : IdentityDbContext<User, Role, Int64, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
     {
+        public DbSet<ParkingLot> ParkingLot { get; set; }
+        public DbSet<ParkingEvent> ParkingEvent { get; set; }
+        public DbSet<ParkingEventLog> ParkingEventLog { get; set; }
+        public DbSet<ParkingInOutLog> ParkingInOutLog { get; set; }
+        public DbSet<ParkingLotBlacklist> ParkingLotBlacklist { get; set; }
+        public DbSet<ParkingLotType> ParkingLotType { get; set; }
+        public DbSet<ParkingPayment> ParkingPayment { get; set; }
+        public DbSet<ParkingPaymentMethod> ParkingPaymentMethod { get; set; }
+
         public PMDBContext(DbContextOptions<PMDBContext> options): base(options)
         {
-
+            //((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += (sender, e) => DateTimeKindAttribute.Apply(e.Entity);
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -99,7 +110,7 @@ namespace PM_DAL
             SeedRoleClaims(modelBuilder);
 
             SeedUserRoles(modelBuilder);
-        }
+       }
 
         public void SeedUsers(ModelBuilder builder)
         {

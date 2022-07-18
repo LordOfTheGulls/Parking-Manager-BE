@@ -6,14 +6,15 @@ using PM_DAL.Repository;
 using System.Data;
 using System.Data.Common;
 
-namespace PM_DAL.UnitOfWork
+namespace PM_DAL.UOW
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private readonly DbConnection _connection;
+        public DbConnection _connection { get; private set; }
 
         private readonly PMDBContext _context;
 
+        /*** User Related ***/
         public IUserRepository UserRepository { get; private set; }
 
         public IUserRoleRepository UserRoleRepository { get; private set; }
@@ -24,17 +25,27 @@ namespace PM_DAL.UnitOfWork
 
         public IUserTokenRepository UserTokenRepository { get; private set; }
 
-
         public IRoleRepository RoleRepository { get; private set; }
 
         public IRoleClaimRepository RoleClaimRepository { get; private set; }
 
 
+        /*** Parking Lot Related ***/
         public IParkingLotRepository ParkingLotRepository { get; private set; }
+        public IParkingLotTypeRepository ParkingLotTypeRepository { get; private set; }
 
-        public IParkingLotPaymentMethodRepository ParkingLotPaymentMethodRepository { get; private set; }
 
-        public IPaymentMethodRepository PaymentMethodRepository { get; private set; }
+        public IParkingLotBlacklistRepository ParkingLotBlacklistRepository { get; private set; }
+
+
+        public IParkingEventRepository ParkingEventRepository { get; private set; }
+        public IParkingEventLogRepository ParkingEventLogRepository { get; private set; }
+
+        public IParkingTrafficRepository ParkingTrafficRepository { get; private set; }
+        public IParkingPaymentRepository ParkingPaymentRepository { get; private set; }
+
+
+        public IParkingPaymentMethodRepository ParkingPaymentMethodRepository { get; private set; }
 
         public IParkingSpotRepository ParkingSpotRepository { get; private set; }
 
@@ -42,6 +53,9 @@ namespace PM_DAL.UnitOfWork
 
         public IParkingFloorRepository ParkingFloorRepository { get; private set; }
 
+        private IDbContextTransaction Transaction;
+
+        private bool _disposed;
 
         public UnitOfWork(PMDBContext context)
         {
@@ -57,32 +71,71 @@ namespace PM_DAL.UnitOfWork
             RoleClaimRepository               = new RoleClaimRepository(_context);
 
             ParkingLotRepository              = new ParkingLotRepository(_context);
-            ParkingLotPaymentMethodRepository = new ParkingLotPaymentMethodRepository(_context);
-            PaymentMethodRepository           = new PaymentMethodRepository(_context);
+            ParkingLotTypeRepository          = new ParkingLotTypeRepository(_context);
+
+            ParkingEventRepository            = new ParkingEventRepository(_context); 
+            ParkingEventLogRepository         = new ParkingEventLogRepository(_context);
+
+            ParkingTrafficRepository          = new ParkingTrafficRepository(_context);
+            ParkingPaymentRepository          = new ParkingPaymentRepository(_context);
+            ParkingPaymentMethodRepository    = new ParkingPaymentMethodRepository(_context);
+
             ParkingSpotRepository             = new ParkingSpotRepository(_context);
             ParkingSpotTypeRepository         = new ParkingSpotTypeRepository(_context);
             ParkingFloorRepository            = new ParkingFloorRepository(_context);
+
+            ParkingLotBlacklistRepository     = new ParkingLotBlacklistRepository(_context);
         }
 
-        public async Task Initialize()
+        public async Task OpenConnectionAsync()
         {
             _connection = _context.Database.GetDbConnection();
 
-            if(_connection.State != ConnectionState.Open)
+            if (_connection.State != ConnectionState.Open)
             {
                 await _context.Database.OpenConnectionAsync();
             }
+
+            Transaction = await _context.Database.BeginTransactionAsync();
         }
 
-        public async Task Commit()
+        public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
+
+            Transaction.Commit();
+        }
+
+        ~UnitOfWork()
+        {
+            Dispose(false);
         }
 
         public void Dispose()
         {
-            _context.Database.CloseConnection();
-            _context.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
+        public void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Transaction?.Dispose();
+
+                    if(_connection != null)
+                    {
+                        _context.Database.CloseConnection();
+                        _connection.Dispose();
+                    }
+
+                    _context.Dispose();
+                }
+                _disposed = true;
+            }
+        }
+
     }
 }

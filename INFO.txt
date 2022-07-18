@@ -16,7 +16,7 @@ Useful Dotnet Commands:
 
 	Update Database From Latest Migration: 	dotnet ef database update -c PMDBContext -s ../PM-AUTH/PM-AUTH.csproj
 
-	Scaffold Database:					dotnet ef dbcontext scaffold "Host=my_host;Database=my_db;Username=my_user;Password=my_pw" Npgsql.EntityFrameworkCore.PostgreSQL
+	Scaffold Database:					dotnet ef dbcontext scaffold "ID=postgres;Password=C@@l3rMast3r97;Host=localhost;Port=5432;Database=pmdb;Pooling=true;CommandTimeout=40" Npgsql.EntityFrameworkCore.PostgreSQL
 
 
 DROP TABLES ----> DROP SCHEMA public CASCADE; CREATE SCHEMA public;
@@ -27,3 +27,20 @@ DROP TABLES ----> DROP SCHEMA public CASCADE; CREATE SCHEMA public;
 4) Id Tokens
 5) User Table Migrations
 6) Roles & Rights
+
+
+SQL Querries
+
+INSERT INTO parking_lot_type (type, description) VALUES ('Single Level', 'Standard Single Level Parking.')
+
+INSERT INTO parking_lot (lot_name, lot_description, lot_covered, lot_latitude, lot_longitude, active) VALUES ('Varna Parking 1', 'A Smart Parking Located in Varna.', true, 0, 0, true)
+
+INSERT INTO parking_floor (floor_name, floor_number, floor_covered, parking_lot_id) VALUES ('Floor 1', 1, true, 1)
+
+INSERT INTO parking_spot_type (type, description) VALUES ('Standard', 'Default Parking Spot Type')
+
+INSERT INTO parking_in_out_log (in_datetime, out_datetime, parking_lot_id, license_plate) VALUES ('2022-07-18 08:00:00', '2022-07-18 10:00:00', 1, 'В31253В')
+
+INSERT INTO parking_spot (parking_floor_id, spot_name, spot_number, spot_type_id, spot_covered) VALUES (1, 'Parking Spot 1', 1, 1, true)
+
+INSERT INTO parking_event (event, description) VALUES ("Entrance Blocked Attempt", "Vehicle Entrance Attempt Blocked at the entrance barrier")

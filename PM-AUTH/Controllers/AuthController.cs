@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using PM_AUTH.Models;
+using PM_DAL.Entity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -18,14 +19,14 @@ namespace PM_AUTH.Controllers
     {
         private readonly ILogger<AuthController> _logger;
 
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<User> _signInManager;
 
         public AuthController(
             ILogger<AuthController> logger,
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager
+            UserManager<User> userManager,
+            SignInManager<User> signInManager
         )
         {
             _logger = logger;
@@ -35,11 +36,11 @@ namespace PM_AUTH.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var result = await _userManager.CreateAsync(new IdentityUser()
+       /*     var result = await _userManager.CreateAsync(new User()
             {
                 UserName = "alex",
             }, "C@@l3rMast3r97");
-
+*/
             return Ok("Test");
         }
 

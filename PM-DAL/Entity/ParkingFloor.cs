@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace PM_DAL.Entity
     [Table("Parking_Floor")]
     public class ParkingFloor
     {
+        [Key]
         [Column("id")]
         public Int64 Id { get; set; }
 
@@ -23,14 +25,14 @@ namespace PM_DAL.Entity
         public bool IsFloorCovered { get; set; } = false;
 
         [Column("date_created")]
-        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime DateCreated { get; set; }
 
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
 
         [Column("active")]
         public bool IsActive { get; set; } = true;
-
 
         public virtual ICollection<ParkingLot> ParkingLots { get; set; }
     }

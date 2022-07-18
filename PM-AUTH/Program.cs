@@ -6,6 +6,7 @@ using PM_AUTH.AuthorizationRequirements;
 using PM_AUTH.Extensions;
 using PM_DAL;
 using PM_DAL.Entity;
+using PM_DAL.UOW;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +21,9 @@ builder.Services.AddCors(options =>
             .WithMethods("GET", "POST")
             .AllowAnyHeader();
 
-            builder
-            .WithOrigins("http://localhost:4200")
-            .WithMethods("GET", "POST", "PUT");
+            builder.AllowAnyHeader().AllowAnyMethod()
+            .WithOrigins("http://localhost:4200");
+            //.WithMethods("GET", "POST", "PUT");
         });
 });
 
@@ -37,11 +38,14 @@ builder.Services.AddDbContext<PMDBContext>(config =>
     config.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"), x => x.MigrationsAssembly("PM-DAL"));
 });
 
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 builder.Services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
 
 builder.Services.AddIdentity<User, Role>()
 .AddEntityFrameworkStores<PMDBContext>()
 .AddDefaultTokenProviders();
+
 
 builder.Services.ConfigureApplicationCookie(config =>
 {
