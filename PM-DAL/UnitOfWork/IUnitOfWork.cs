@@ -26,6 +26,10 @@ namespace PM_DAL.UOW
         public IParkingEventLogRepository ParkingEventLogRepository { get; }
 
         public IParkingTrafficRepository ParkingTrafficRepository { get; }
+
+        public IParkingPricingPlanRepository ParkingPricingPlanRepository { get; }
+        public IParkingPricingRepository ParkingPricingRepository { get; }
+
         public IParkingPaymentRepository ParkingPaymentRepository { get; }
 
         public IParkingPaymentMethodRepository ParkingPaymentMethodRepository { get; }
@@ -34,6 +38,7 @@ namespace PM_DAL.UOW
         public IParkingSpotTypeRepository ParkingSpotTypeRepository { get; }
         public IParkingFloorRepository ParkingFloorRepository { get; }
 
-        //IRepository<TEntity, TId> GetRepository<TEntity, Tid> where TEntity : Entity<Tid> where Tid : IEquatable<TId>;
+        public IParkingWorkhoursPlanRepository ParkingWorkhoursPlanRepository { get; }
+        public IParkingWorkhoursRepository ParkingWorkhoursRepository { get; }
     }
 }

@@ -42,6 +42,10 @@ namespace PM_DAL.UOW
         public IParkingEventLogRepository ParkingEventLogRepository { get; private set; }
 
         public IParkingTrafficRepository ParkingTrafficRepository { get; private set; }
+
+        public IParkingPricingPlanRepository ParkingPricingPlanRepository { get; private set; }
+        public IParkingPricingRepository ParkingPricingRepository { get; private set; }
+
         public IParkingPaymentRepository ParkingPaymentRepository { get; private set; }
 
 
@@ -52,6 +56,10 @@ namespace PM_DAL.UOW
         public IParkingSpotTypeRepository ParkingSpotTypeRepository { get; private set; }
 
         public IParkingFloorRepository ParkingFloorRepository { get; private set; }
+
+        public IParkingWorkhoursRepository ParkingWorkhoursRepository { get; private set; }
+        public IParkingWorkhoursPlanRepository ParkingWorkhoursPlanRepository { get; private set; }
+
 
         private IDbContextTransaction Transaction;
 
@@ -77,7 +85,11 @@ namespace PM_DAL.UOW
             ParkingEventLogRepository         = new ParkingEventLogRepository(_context);
 
             ParkingTrafficRepository          = new ParkingTrafficRepository(_context);
-            ParkingPaymentRepository          = new ParkingPaymentRepository(_context);
+
+            ParkingPricingPlanRepository      = new ParkingPricingPlanRepository(_context);
+            ParkingPricingRepository          = new ParkingPricingRepository(_context);
+
+            ParkingPaymentRepository = new ParkingPaymentRepository(_context);
             ParkingPaymentMethodRepository    = new ParkingPaymentMethodRepository(_context);
 
             ParkingSpotRepository             = new ParkingSpotRepository(_context);
@@ -85,6 +97,9 @@ namespace PM_DAL.UOW
             ParkingFloorRepository            = new ParkingFloorRepository(_context);
 
             ParkingLotBlacklistRepository     = new ParkingLotBlacklistRepository(_context);
+
+            ParkingWorkhoursRepository        = new ParkingWorkhoursRepository(_context);
+            ParkingWorkhoursPlanRepository    = new ParkingWorkhoursPlanRepository(_context);
         }
 
         public async Task OpenConnectionAsync()

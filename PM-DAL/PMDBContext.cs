@@ -14,7 +14,11 @@ namespace PM_DAL
         public DbSet<ParkingLotBlacklist> ParkingLotBlacklist { get; set; }
         public DbSet<ParkingLotType> ParkingLotType { get; set; }
         public DbSet<ParkingPayment> ParkingPayment { get; set; }
+        public DbSet<ParkingPricing> ParkingPricing { get; set; }
+        public DbSet<ParkingPricingPlan> ParkingPricingPlan { get; set; }
         public DbSet<ParkingPaymentMethod> ParkingPaymentMethod { get; set; }
+        public DbSet<ParkingWorkhours> ParkingWorkhours { get; set; }
+        public DbSet<ParkingWorkhoursPlan> ParkingWorkhoursPlans { get; set; }
 
         public PMDBContext(DbContextOptions<PMDBContext> options): base(options)
         {

@@ -19,7 +19,7 @@ namespace PM_DAL.Entity
         public Int64 ParkingLotId { get; set; }
 
         [Column("license_plate")]
-        public string LicensePlate { get; set; }
+        public string? LicensePlate { get; set; } = "";
 
         [Column("active")]
         public bool IsActive { get; set; } = true;

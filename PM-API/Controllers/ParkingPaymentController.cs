@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PM_Common.DTO;
 using PM_Common.DTO.Chart;
+using PM_Common.DTO.Filtering;
+using PM_Common.DTO.Paging;
 using PM_Common.DTO.Parking;
 using PM_Common.DTO.Payment;
 using PM_CQRS.Commands;
@@ -63,6 +65,20 @@ namespace PM_API.Controllers
                     ParkingLotId = parkingLotId,
                     FromDate     = filter.FromDate,
                     ToDate       = filter.ToDate,
+                }
+            );
+            return Ok(result);
+        }
+
+        [HttpPost("all/{parkingLotId}")]
+        [ProducesResponseType(typeof(PagingResult<ParkingLotPaymentDto>), 200)]
+        public async Task<ActionResult> GetAllPayments(Int64 parkingLotId, [FromBody] FilterDto filter, CancellationToken token = default)
+        {
+            var result = await _queryDispatcher.DispatchAsync<GetAllPaymentsQuery, PagingResult<ParkingLotPaymentDto>>(
+                new GetAllPaymentsQuery()
+                {
+                    ParkingLotId = parkingLotId,
+                    Filter = filter,
                 }
             );
             return Ok(result);

@@ -26,7 +26,8 @@ namespace PM_DAL
              {typeof(ParkingTrafficRepository),  uow => uow.ParkingTrafficRepository },
              {typeof(ParkingPaymentRepository),  uow => uow.ParkingPaymentRepository },
              {typeof(ParkingPaymentMethodRepository),  uow => uow.ParkingPaymentMethodRepository },
-
+             {typeof(ParkingWorkhoursRepository),       uow => uow.ParkingWorkhoursRepository },
+             {typeof(ParkingWorkhoursPlanRepository),  uow => uow.ParkingWorkhoursPlanRepository },
         };
 
         private readonly Func<bool, PMDBContext> _contextFactory;

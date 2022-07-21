@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PM_Common.DTO.Chart;
+using PM_Common.DTO.Filtering;
+using PM_Common.DTO.Paging;
 using PM_Common.DTO.Payment;
 using PM_Common.Exceptions;
 using PM_Common.Extensions.Datetime;
@@ -20,6 +22,31 @@ namespace PM_DAL.Repository
         public ParkingPaymentRepository(PMDBContext dbContext) : base(dbContext)
         {
             context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        }
+
+        public async Task<PagingResult<ParkingLotPaymentDto>> GetAllPayments(Int64 parkingLotId, FilterDto filter, CancellationToken cancellationToken)
+        {
+            var result = new PagingResult<ParkingLotPaymentDto>();
+
+            result.TotalRecords = await context.ParkingPayment.CountAsync(e => e.ParkingLotId == parkingLotId, cancellationToken);
+
+            var query = context.ParkingPayment.AsNoTracking().Where(e => e.ParkingLotId == parkingLotId);
+
+            query = query.OrderByDescending(v => v.DateCreated);
+
+            result.Records = await query
+            .Skip(filter.Paging.Skip)
+            .Take(filter.Paging.Take)
+            .Select(e => new ParkingLotPaymentDto()
+            {
+                PaymentId = e.Id,
+                PaymentMethod = e.ParkingPaymentMethod.PaymentMethodName,
+                LicensePlate = e.ParkingInOutLog.LicensePlate,
+                Amount  = e.Amount,
+                Date = e.DateCreated
+            }).ToListAsync(cancellationToken);
+
+            return result;
         }
 
         public async Task PayForStay(Int64 parkingLotId, string licensePlate, CreditCardDto creditCardInfo, CancellationToken cancellationToken = default)
